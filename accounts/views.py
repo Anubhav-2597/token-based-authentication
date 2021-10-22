@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
-from rest_framework.authtoken.views import ObtainAuthToken
+from django.shortcuts import render
+from rest_framework import authentication, permissions
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from accounts.models import ListUserModel
 from accounts.serializers import UserListSerializer
 
@@ -56,9 +56,11 @@ class ListUserAPIView(APIView):
         get_users = ListUserModel.objects.all()
 
         if not get_users:
-            return Response("Unable to fetch the data")
+            return Response("no users existing")
 
-        return Response(get_users)
+        user_list_serializer = UserListSerializer(get_users, many=True)
+
+        return Response({"users": user_list_serializer.data})
 
     def post(self, request):
         """
