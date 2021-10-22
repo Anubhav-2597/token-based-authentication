@@ -21,8 +21,8 @@ class ListUsers(APIView):
         """
         Return a list of all users.
         """
-        usernames = [user.username for user in User.objects.all()]
-        return Response(usernames)
+        email = [user.email for user in User.objects.all()]
+        return Response(emails)
 
 class CustomAuthToken(ObtainAuthToken):
 
