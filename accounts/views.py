@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from accounts.models import ListUserModel
+from accounts.serializers import UserListSerializer
+
 
 class ListUsers(APIView):
     """
@@ -24,6 +27,7 @@ class ListUsers(APIView):
         username = [user.username for user in User.objects.all()]
         return Response(username)
 
+
 class CustomAuthToken(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
@@ -37,3 +41,37 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+
+
+class ListUserAPIView(APIView):
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """
+            Get method to get list of users
+        """
+
+        get_users = ListUserModel.objects.all()
+
+        if not get_users:
+            return Response("Unable to fetch the data")
+
+        return Response(get_users)
+
+    def post(self, request):
+        """
+        Post method to add new user in db
+        """
+
+        request_body_params = request.data.copy()
+
+        user_serializer = UserListSerializer(data=request_body_params)
+
+        if not user_serializer.is_valid():
+            return Response(user_serializer.errors)
+
+        user_serializer.save()
+
+        return Response(data=user_serializer.data)
