@@ -15,5 +15,5 @@ class ListUserModel(models.Model):
 
     name = models.CharField(max_length=50)
     email = models.EmailField()
-    number = models.IntegerField(max_length=10)
+    number = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)

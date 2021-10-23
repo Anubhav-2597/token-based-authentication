@@ -35,9 +35,16 @@ class CustomAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
+        try:
+            user_token = Token.objects.get(user=user)
+            user_token.delete()
+        except Token.DoesNotExist:
+            pass
+        finally:
+            user_token = Token.objects.create(user=user)
+
         return Response({
-            'token': token.key,
+            'token': user_token.key,
             'user_id': user.pk,
             'email': user.email
         })
