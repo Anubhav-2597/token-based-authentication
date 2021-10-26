@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(rcmbhavy1&d$93n8l#^6(h#c4*$s^n=8k2xby^)29%e(@spgx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['devapi.deployed.anaws.me']
 
 
 # Application definition
