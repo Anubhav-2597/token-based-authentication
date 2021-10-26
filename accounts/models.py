@@ -11,9 +11,9 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-class ListUserModel(models.Model):
+class ListItemModel(models.Model):
 
     name = models.CharField(max_length=50)
-    email = models.EmailField()
-    number = models.CharField(max_length=10)
+    code = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)

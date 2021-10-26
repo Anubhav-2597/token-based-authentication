@@ -6,23 +6,23 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import ListUserModel
-from accounts.serializers import UserListSerializer
+from accounts.models import ListItemModel
+from accounts.serializers import ItemSerializer
 
 
-class ListUsers(APIView):
+class ListItems(APIView):
     """
-    View to list all users in the system.
+    View to list all Items in the system.
 
     * Requires token authentication.
-    * Only admin users are able to access this view.
+    * Only admin Items are able to access this view.
     """
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
         """
-        Return a list of all users.
+        Return a list of all Items.
         """
         username = [user.username for user in User.objects.all()]
         return Response(username)
@@ -50,24 +50,24 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
-class ListUserAPIView(APIView):
+class ListItemAPIView(APIView):
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         """
-            Get method to get list of users
+            Get method to get list of Items
         """
 
-        get_users = ListUserModel.objects.all()
+        get_Items = ListItemModel.objects.all()
 
-        if not get_users:
-            return Response("no users existing")
+        if not get_Items:
+            return Response({"Items": []})
 
-        user_list_serializer = UserListSerializer(get_users, many=True)
+        user_list_serializer = ItemSerializer(get_Items, many=True)
 
-        return Response({"users": user_list_serializer.data})
+        return Response({"Items": user_list_serializer.data})
 
     def post(self, request):
         """
@@ -76,7 +76,7 @@ class ListUserAPIView(APIView):
 
         request_body_params = request.data.copy()
 
-        user_serializer = UserListSerializer(data=request_body_params)
+        user_serializer = ItemSerializer(data=request_body_params)
 
         if not user_serializer.is_valid():
             return Response(user_serializer.errors)
